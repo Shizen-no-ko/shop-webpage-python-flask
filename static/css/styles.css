@@ -1,0 +1,10 @@
+:root {
+  --blue: #3ec1d3;
+  --pale: #f6f7d7;
+  --orange: #ff9a00;
+  --pink: #ff165d;
+}
+
+body {
+    background-color: var(--pale);
+}
