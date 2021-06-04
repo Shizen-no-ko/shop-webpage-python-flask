@@ -1,10 +1,156 @@
+/*font-family: 'Changa', sans-serif;
+font-family: 'Josefin Sans', sans-serif;
+font-family: 'Lato', sans-serif;
+font-family: 'Montserrat', sans-serif;
+font-family: 'Montserrat Alternates', sans-serif;*/
+
 :root {
   --blue: #3ec1d3;
   --pale: #f6f7d7;
   --orange: #ff9a00;
   --pink: #ff165d;
+  --title-font: 'Montserrat Alternates', sans-serif;
+  --page-font: 'Lato', sans-serif;
 }
 
 body {
     background-color: var(--pale);
+    font-family: var(--page-font);
+    margin: 0;
+    padding: 0;
+}
+
+footer {
+    background-color: var(--orange);
+    bottom: 0;
+    font-family: var(--title-font);
+    padding-bottom: 0;
+    position: absolute;
+    width: 100%;
+}
+
+footer a {
+    color: var(--pale);
+    font-size: 2rem;
+    margin: 10px;
+    padding: 10px 10px 0;
+}
+
+footer .flex{
+    justify-content: space-between;
+}
+
+footer p {
+    color: var(--pale);
+}
+
+h1 {
+    font-family: var(--title-font);
+    font-weight: 800;
+    font-size: 3rem;
+    color: var(--pink);
+}
+
+img{
+    height: 50%;
+}
+
+nav {
+    background-color: var(--blue);
+    height: 200px;
+}
+
+nav .flex {
+    justify-content: space-between;
+}
+
+nav ul {
+    color: var(--pale);
+    display: flex;
+    font-family: var(--title-font);
+}
+
+section{
+    position: relative;
+    top: -50px;
+}
+
+section .flex{
+    flex-wrap: wrap;
+}
+
+.button{
+    background-color: var(--orange);
+    border: none;
+    border-radius: 5px;
+    color: var(--pale);
+    font-weight: bold;
+    font-size: 1rem;
+    padding: 5px 10px;
+    margin: 10px;
+}
+
+.button:hover{
+    background-color: var(--pink);
+    transform: scale(1.05);
+}
+
+.button:active{
+    background-color: var(--blue);
+    transform: scale(0.95);
+}
+
+.card{
+       background-color: var(--pale);
+       border: var(--pink) 3px solid;
+       border-radius: 5px;
+       box-shadow: 0px 0px 50px rgba(80, 80, 80, 0.5);
+       font-family: var(--title-font);
+       height: 300px;
+       text-align: center;
+       transform: rotate(3deg);
+       transition: transform 0.5s ease-out;
+       width: 200px;
+       z-index: 100;
+}
+
+.card:hover{
+    transform: rotate(0deg);
+}
+
+.card h3{
+    color: var(--blue);
+    padding: 5px;
+    white-space: no-wrap;
+}
+
+.card h4{
+    margin: 5px;
+}
+
+
+.container {
+    margin: 0 auto;
+    max-width: 1000px;
+}
+
+.flex{
+    align-items: center;
+    display: flex;
+    height: 100%;
+}
+
+nav li{
+     list-style: none;
+     padding: 10px;
+     margin: 10px;
+}
+
+.slope {
+    background-color: var(--pale);
+    height: 100px;
+    position: relative;
+    right: -20px;
+    top: 15px;
+    transform: rotate(-4deg);
 }

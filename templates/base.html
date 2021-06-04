@@ -6,14 +6,49 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Changa&family=Josefin+Sans:wght@300;400;600&family=Lato&family=Montserrat&family=Montserrat+Alternates:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet"
+          href="{{url_for('static', filename='css/styles.css')}}">
     <link rel="icon"
           type="image/png"
           href="static/images/favicon.ico">
     <title>Ātoshoppu</title>
 </head>
 <body>
+    <nav>
+        <div class="container">
+            <div class="flex">
+            <h1>Ātoshoppu</h1>
+
+<!--        <div class="menu">-->
+            <ul>
+                <li>Home</li>
+                <li>Register</li>
+                <li>Login</li>
+                <li><i class="fas fa-shopping-cart"></i></li>
+            </ul>
+<!--        </div>-->
+                </div>
+            </div>
+        <div class="slope">
+
+        </div>
+    </nav>
+
 <!--    <i class="fas fa-shopping-cart"></i>-->
 <!--    <i class="fas fa-space-shuttle"></i>-->
 {% block content %}{% endblock %}
+    <footer>
+        <div class="container">
+            <div class="flex">
+                <div></div>
+                <div>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+                <p class="copyright">&#169 {{ current_year }} M Search.</p>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>
