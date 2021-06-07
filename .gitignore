@@ -140,3 +140,4 @@ dmypy.json
 cython_debug/
 
 /.env
+/static/images/art/

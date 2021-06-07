@@ -4,11 +4,14 @@
 <section>
     <div class="container card-stack">
         <div class="flex">
+            {% for art in art_list %}
             <div class="card">
-                <h3>
-                    Product Name
-                </h3>
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg/800px-Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg">
+                <img src="{{art}}">
+                <div class="name-box">
+                    <h3>
+                        Product Name
+                    </h3>
+                </div>
                 <h4>
                     Price: $
                 </h4>
@@ -16,8 +19,15 @@
                     Details
                 </button>
             </div>
+            {% endfor %}
+
         </div>
     </div>
 </section>
+<div class="modal">
+</div>
+<div class="card modal-card">
+        <h1>Title</h1>
+    </div>
 
 {% endblock %}
