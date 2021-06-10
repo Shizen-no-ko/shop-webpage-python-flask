@@ -150,7 +150,6 @@ section .flex{
     padding: 0;
     position: relative;
     top: -1rem;
-    white-space: no-wrap;
 }
 
 .card h4{
@@ -169,7 +168,11 @@ section .flex{
     height: 100%;
 }
 
-.backdrop{
+.hidden {
+    display: none;
+}
+
+#backdrop{
     background-color: black;
     display: none;
     /*height: 100%;*/
@@ -184,11 +187,11 @@ section .flex{
     z-index: 250;
 }
 
-.backdrop-show {
-    display: block;
+.show {
+    display: block !important;
 }
 
-.modal-card{
+#modal-card{
         display: none;
         height: 80vh;
         margin: 10vh 20%;

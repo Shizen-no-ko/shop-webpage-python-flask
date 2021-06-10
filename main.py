@@ -6,11 +6,11 @@ from flask_sqlalchemy import SQLAlchemy
 
 
 load_dotenv()
-art_list = ["about.png", "boat.png", "bus.png", "elephantus.png", "gojongarr.png", "hana.png", "hula.png", "lenny.png", "leonard.png", "paradies.png", "station.png", "the_handbag.png", "this_is_the_way.png", "zowie.png"]
-art_path_list = [f"static/images/art/{a}" for a in art_list]
-title_list = ["I'm about to tell you...", "The Boat House", "The Bus Gang", "Elegypt", "Dr. Gojongarr was an incredibly nice man", "Hana no Koala", "Hula Horse", "The Ballad of Lenny Kowalusky and the Man Sized Critter", "Leonard", "The Catcher of Birds of Paradise", "The Station Master", "The Handbag of the Best Friend of the Boy Who Has the Whole Universe Inside his Mouth", "This is the way we make the sun rise", "Zowie-Kerpowie"]
-description_list = ["2021, Oil on Canvas, 100x80cm"]
-price_list = ["1000", "1000", "1500", "2500", "2000", "2500", "1000", "2000", "2500", "1500", "1000", "3500", "2500", "1500"]
+# art_list = ["about.png", "boat.png", "bus.png", "elephantus.png", "gojongarr.png", "hana.png", "hula.png", "lenny.png", "leonard.png", "paradies.png", "station.png", "the_handbag.png", "this_is_the_way.png", "zowie.png"]
+# art_path_list = [f"static/images/art/{a}" for a in art_list]
+# title_list = ["I'm about to tell you...", "The Boat House", "The Bus Gang", "Elegypt", "Dr. Gojongarr was an incredibly nice man", "Hana no Koala", "Hula Horse", "The Ballad of Lenny Kowalusky and the Man Sized Critter", "Leonard", "The Catcher of Birds of Paradise", "The Station Master", "The Handbag of the Best Friend of the Boy Who Has the Whole Universe Inside his Mouth", "This is the way we make the sun rise", "Zowie-Kerpowie"]
+# description_list = ["2021, Oil on Canvas, 100x80cm"]
+# price_list = ["1000", "1000", "1500", "2500", "2000", "2500", "1000", "2000", "2500", "1500", "1000", "3500", "2500", "1500"]
 
 # shuffle(art_path_list)
 # print(art_path_list)
@@ -52,7 +52,13 @@ def create_art_database():
 
 @app.route('/', methods=['POST', 'GET'])
 def home():
-	return render_template("index.html", art_list=art_path_list, current_year=current_year)
+    all_artworks = Artwork.query.all()
+    art_list = []
+    for artwork in all_artworks:
+        if not artwork.sold:
+            art_list.append(artwork)
+    shuffle(art_list)
+    return render_template("index.html", art_list=art_list, current_year=current_year)
 
 
 if __name__ == "__main__":

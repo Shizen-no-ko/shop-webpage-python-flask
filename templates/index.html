@@ -8,17 +8,19 @@
     <div class="container card-stack">
         <div class="flex">
             {% for art in art_list %}
-            <div class="card" id="{{}}">
-                <img src="{{art}}">
+            <div class="card" id="card-{{ art.id }}">
+                <img src="{{art.img_url}}" id="img-{{ art.id }}">
                 <div class="name-box">
-                    <h3>
-                        Product Name
+                    <div class="hidden" id="full-title-{{ art.id }}">{{ art.title }}</div>
+                    <h3 id="title-{{ art.id }}">
+                        {{ art.title[0:14] }}
                     </h3>
                 </div>
-                <h4>
-                    Price: $
+                <div class="hidden" id="description-{{ art.id }}">{{ art.description }}</div>
+                <h4 id="price-{{ art.id }}">
+                    Price: €{{ art.price }}
                 </h4>
-                <button class="button">
+                <button class="button" id="button-{{ art.id }}">
                     Details
                 </button>
             </div>
@@ -27,9 +29,12 @@
         </div>
     </div>
 </section>
-<div class="backdrop">
+<div id="backdrop">
 </div>
-<div class="card modal-card">
-        <h1>Title</h1>
+<div class="card" id="modal-card">
+        <h2 id="modal-title">Title</h2>
+        <img>
+        <p id="modal-description"></p>
+        <h3></h3>
     </div>
 {% endblock %}

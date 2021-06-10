@@ -1,32 +1,27 @@
-//var buttons = document.getElementById('lalala');
-//buttons.innerHTML="Woolaaah";
-//buttons.onclick = function(){
-//    buttons.innerHTML="Ploppy"
-//}
-window.onload = function(){
+
+window.onload = function(e){
     buttons = document.getElementsByClassName('button');
     title = document.getElementById('lalala');
-    title.innerHTML="purple";
+    backdrop = document.getElementById('backdrop');
+    modal = document.getElementById('modal-card');
+    title.innerHTML="wow";
     var i;
     for (i = 0; i < buttons.length; i++) {
     buttons[i].onclick = function(e){
-    title.innerHTML="MobblyBoo";
+    var id = this.id;
+    var num = id.split('-')[1];
+    var titleText = document.getElementById('full-title-' + num).innerHTML;
+    var descriptionText = document.getElementById('description-' + num).innerHTML;
+    title.innerHTML= backdrop.id;
+    document.documentElement.scrollTop = 0;
+    backdrop.classList.toggle('show');
+    modal.classList.toggle('show');
+    document.getElementById('modal-title').innerHTML = titleText;
+    document.getElementById('modal-description').innerHTML = descriptionText;
     current = 0;
   };
     buttons[i].style.backgroundColor="red";
     }
     }
-//    for (i = 0; i < buttons.length; i++) {
-//   buttons[i].style.backgroundColor = "red";
-//    }
-//buttons = document.getElementsByClassName('card');
-//title = document.getElementById('lalala');
-////var i;
-//title.innerHTML="purple";
-//buttons[0].style.backgroundColor = "red";
-//for (i = 0; i < buttons.length; i++) {
-//    buttons[i].onclick = function(){
-//    title.innerHTML="MobblyBoo";
-//  }
 
 
