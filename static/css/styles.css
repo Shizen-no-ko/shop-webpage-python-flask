@@ -169,9 +169,9 @@ section .flex{
     height: 100%;
 }
 
-.modal{
+.backdrop{
     background-color: black;
-    /*display: none;*/
+    display: none;
     /*height: 100%;*/
     opacity: 0.5;
     overflow: hidden;
@@ -184,8 +184,12 @@ section .flex{
     z-index: 250;
 }
 
+.backdrop-show {
+    display: block;
+}
+
 .modal-card{
-        /*display: none;*/
+        display: none;
         height: 80vh;
         margin: 10vh 20%;
         opacity: 1;
