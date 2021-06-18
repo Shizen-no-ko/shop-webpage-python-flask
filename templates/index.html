@@ -9,7 +9,7 @@
         <div class="flex">
             {% for art in art_list %}
             <div class="card" id="card-{{ art.id }}">
-                <img src="{{art.img_url}}" id="img-{{ art.id }}">
+                    <img src="{{art.img_url}}" id="img-{{ art.id }}">
                 <div class="name-box">
                     <div class="hidden" id="full-title-{{ art.id }}">{{ art.title }}</div>
                     <h3 id="title-{{ art.id }}">
@@ -29,12 +29,34 @@
         </div>
     </div>
 </section>
-<div id="backdrop">
+<!--<div id="">-->
+<!--    -->
+<!--</div>-->
+<div id="backdrop" onclick="toggleModal()">
+
 </div>
 <div class="card" id="modal-card">
-        <h2 id="modal-title">Title</h2>
-        <img>
-        <p id="modal-description"></p>
-        <h3></h3>
+    <h2 id="modal-title">Title</h2>
+    <img id="modal-image">
+    <p id="modal-description"></p>
+    <h3 id="modal-price"></h3>
+    <div class="modal-buttons">
+        <div>
+             <button class="button" id="close-modal-button">
+        Close
+    </button>
+        </div>
+       <div>
+
+       </div>
+      <div>
+           <button class="button" id="buy-button">
+        Add to Cart <i class="fas fa-shopping-cart cart" ></i>
+    </button>
+      </div>
+
     </div>
+
+
+</div>
 {% endblock %}

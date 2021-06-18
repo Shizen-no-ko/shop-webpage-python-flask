@@ -1,27 +1,35 @@
+ function toggleModal() {
+            backdrop.classList.toggle('show');
+            modalCard.classList.toggle('show');
+            modalClose.classList.toggle('show');
+ };
 
-window.onload = function(e){
+function setButtons(){
     buttons = document.getElementsByClassName('button');
-    title = document.getElementById('lalala');
     backdrop = document.getElementById('backdrop');
-    modal = document.getElementById('modal-card');
-    title.innerHTML="wow";
+    modalCard = document.getElementById('modal-card');
     var i;
     for (i = 0; i < buttons.length; i++) {
-    buttons[i].onclick = function(e){
-    var id = this.id;
-    var num = id.split('-')[1];
-    var titleText = document.getElementById('full-title-' + num).innerHTML;
-    var descriptionText = document.getElementById('description-' + num).innerHTML;
-    title.innerHTML= backdrop.id;
-    document.documentElement.scrollTop = 0;
-    backdrop.classList.toggle('show');
-    modal.classList.toggle('show');
-    document.getElementById('modal-title').innerHTML = titleText;
-    document.getElementById('modal-description').innerHTML = descriptionText;
-    current = 0;
-  };
-    buttons[i].style.backgroundColor="red";
-    }
-    }
+        buttons[i].onclick = function(){
+            var id = this.id;
+            var num = id.split('-')[1];
+            var titleText = document.getElementById('full-title-' + num).innerHTML;
+            var descriptionText = document.getElementById('description-' + num).innerHTML;
+            var priceText = document.getElementById('price-' + num).innerHTML;
+            var imageUrl = document.getElementById('img-' + num).src;
+            document.documentElement.scrollTop = 0;
+            modalClose = document.getElementById('close-modal-button');
+            modalClose.onclick = toggleModal;
+            toggleModal()
+            document.getElementById('modal-title').innerHTML = titleText;
+            document.getElementById('modal-image').src = imageUrl;
+            document.getElementById('modal-description').innerHTML = descriptionText;
+            document.getElementById('modal-price').innerHTML = priceText;
+            current = 0;
+        };
+    };
+};
 
-
+window.onload = function(){
+ setButtons()
+};

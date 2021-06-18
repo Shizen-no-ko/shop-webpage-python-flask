@@ -3,6 +3,8 @@ from flask import Flask, render_template, redirect, url_for, flash
 from datetime import datetime
 from random import shuffle
 from flask_sqlalchemy import SQLAlchemy
+from flask_wtf import FlaskForm
+from wtforms import SubmitField
 
 
 load_dotenv()
@@ -32,6 +34,8 @@ class Artwork(db.Model):
     img_url = db.Column(db.String(500), nullable=False)
     price = db.Column(db.String(250), nullable=True)
     sold = db.Column(db.Boolean, nullable=False)
+
+
 
 # db.create_all()
 
