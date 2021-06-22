@@ -1,5 +1,5 @@
 from dotenv import load_dotenv
-from flask import Flask, render_template, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash
 from datetime import datetime
 from random import shuffle
 from flask_sqlalchemy import SQLAlchemy
@@ -40,6 +40,7 @@ class Purchase(db.Model):
 
 
 
+
 # db.create_all()
 
 
@@ -59,13 +60,23 @@ def create_art_database():
 
 @app.route('/', methods=['POST', 'GET'])
 def home():
+    if request.method == 'POST':
+        art_id = request.form.get('buy-button')
+        artwork = Artwork.query.get(art_id)
+        artwork.sold = True
+        new_purchase = Purchase(
+            id=art_id
+            )
+        db.session.add(new_purchase)
+        db.session.commit()
+    purchases = Purchase.query.count()
     all_artworks = Artwork.query.all()
     art_list = []
     for artwork in all_artworks:
         if not artwork.sold:
             art_list.append(artwork)
     shuffle(art_list)
-    return render_template("index.html", art_list=art_list, current_year=current_year)
+    return render_template("index.html", art_list=art_list, purchases=purchases, current_year=current_year)
 
 
 if __name__ == "__main__":

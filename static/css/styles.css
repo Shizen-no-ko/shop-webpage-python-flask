@@ -170,7 +170,7 @@ section .flex{
 
 #cart-count{
     background-color: var(--pink);
-    border: 1.5px solid var(--pale);
+    border: 3px solid var(--pale);
     border-radius: 50%;
     color: var(--pale);
     display: none;
@@ -179,9 +179,9 @@ section .flex{
     line-height: 1.15rem;
     height: 1rem;
     position: relative;
-    right: -0.75rem;
+    right: -1rem;
     text-align: center;
-    top: -1.75rem;
+    top: -2rem;
     width: 1rem;
 }
 

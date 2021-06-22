@@ -25,6 +25,7 @@ function setButtons(){
             document.getElementById('modal-image').src = imageUrl;
             document.getElementById('modal-description').innerHTML = descriptionText;
             document.getElementById('modal-price').innerHTML = priceText;
+            document.getElementById('buy-button').value = num;
             current = 0;
         };
     };
