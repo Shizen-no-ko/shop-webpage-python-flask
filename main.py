@@ -35,6 +35,9 @@ class Artwork(db.Model):
     price = db.Column(db.String(250), nullable=True)
     sold = db.Column(db.Boolean, nullable=False)
 
+class Purchase(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+
 
 
 # db.create_all()
