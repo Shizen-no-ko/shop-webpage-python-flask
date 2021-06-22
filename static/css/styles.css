@@ -168,6 +168,23 @@ section .flex{
     margin: 15px 5px 10px;
 }
 
+#cart-count{
+    background-color: var(--pink);
+    border: 1.5px solid var(--pale);
+    border-radius: 50%;
+    color: var(--pale);
+    display: none;
+    font-size: 0.75rem;
+    font-weight: bold;
+    line-height: 1.15rem;
+    height: 1rem;
+    position: relative;
+    right: -0.75rem;
+    text-align: center;
+    top: -1.75rem;
+    width: 1rem;
+}
+
 
 .container {
     margin: 0 auto;

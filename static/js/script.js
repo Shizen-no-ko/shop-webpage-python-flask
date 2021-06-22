@@ -30,6 +30,17 @@ function setButtons(){
     };
 };
 
+function setCartNumber(){
+    cartNumber = document.getElementById("cart-count");
+    if (cartNumber.innerHTML != "0"){
+        cartNumber.classList.add('show');
+    } else {
+        cartNumber.classList.remove("show");
+    };
+
+}
+
 window.onload = function(){
  setButtons()
+ setCartNumber()
 };
