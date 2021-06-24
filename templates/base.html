@@ -21,10 +21,14 @@
 
 <!--        <div class="menu">-->
             <ul>
+                {% if request.endpoint != 'home'  %}
                 <li><a href="{{ url_for('home') }}">Home</a></li>
+                {% endif %}
                 <li>Register</li>
                 <li>Login</li>
+                {% if request.endpoint != 'cart'  %}
                 <li><a href="{{ url_for('cart') }}"><i class="fas fa-shopping-cart cart"></i><div id="cart-count">{{ purchases }}</div></a></li>
+                {% endif %}
             </ul>
 <!--        </div>-->
                 </div>
