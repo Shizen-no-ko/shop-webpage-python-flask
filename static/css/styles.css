@@ -18,6 +18,11 @@ html{
   --page-font: 'Lato', sans-serif;
 }
 
+a {
+    color: var(--pale);
+    text-decoration: none;
+}
+
 body {
     background-color: var(--pale);
     font-family: var(--page-font);
@@ -152,6 +157,46 @@ section .flex{
        z-index: 100;
 }
 
+.purchase-card{
+    border-color: var(--blue);
+    height: 150px;
+    margin: 0 auto 20px;
+    padding-top: 0;
+    transform: rotate(0deg);
+    width: 75%;
+}
+
+
+
+
+.purchase-details{
+    height: 100%;
+    padding-top: 10px;
+    position: absolute;
+    right: 3%;
+    text-align: justify;
+    top: 0;
+    width: 65%;
+
+}
+
+.purchase-img-container{
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 30%;
+}
+
+.purchase-img-container img{
+    border-radius: 0;
+    border: 2px solid black;
+    margin-top: 10px;
+    object-fit: contain;
+    height: 125px;
+    width: auto;
+}
+
+
 .card:hover{
     border: var(--pink) 3px solid;
     transform: rotate(0deg);
@@ -218,6 +263,16 @@ section .flex{
 
 #buy-button{
     background-color: var(--pink);
+}
+
+.purchase-card h3 {
+    color: var(--pink);
+}
+
+.purchase-details button{
+    position: absolute;
+    right:0;
+    bottom:10px;;
 }
 
 .show {

@@ -24,7 +24,7 @@
                 <li>Home</li>
                 <li>Register</li>
                 <li>Login</li>
-                <li><i class="fas fa-shopping-cart cart"></i><div id="cart-count">{{ purchases }}</div></li>
+                <li><a href="{{ url_for('cart') }}"><i class="fas fa-shopping-cart cart"></i><div id="cart-count">{{ purchases }}</div></a></li>
             </ul>
 <!--        </div>-->
                 </div>

@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+<script src="{{ url_for('static' , filename='js/cart.js') }}"></script>
+{% block content %}
+{% set total= namespace(value=0) %}
+<div class="container">
+{% for purchase in purchases_list %}
+{% set total.value = total.value + purchase.price | int %}
+<div class="card purchase-card">
+    <div class="purchase-img-container">
+         <img src="{{purchase.img_url}}">
+    </div>
+    <div class="purchase-details">
+        <h3>{{ purchase.title }}</h3>
+        <h4>€{{ purchase.price }}</h4>
+        <form>
+            <button class="button">Remove <i class="fas fa-trash-alt"></i></button>
+        </form>
+    </div>
+</div>
+{% endfor %}
+    <div class="card purchase-card"><h1>Total Price: €{{ total.value }}</h1>
+     <form>
+            <button class="button">Checkout <i class="far fa-credit-card"></i></button>
+        </form>
+    </div>
+
+</div>
+
+{% endblock %}

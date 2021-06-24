@@ -79,5 +79,21 @@ def home():
     return render_template("index.html", art_list=art_list, purchases=purchases, current_year=current_year)
 
 
+@app.route('/cart', methods=['POST', 'GET'])
+def cart():
+    purchases = Purchase.query.count()
+    all_purchases = Purchase.query.all()
+    purchase_id_list = []
+    purchases_list = []
+    for purchase in all_purchases:
+        purchase_id_list.append(purchase.id)
+        purchases_list.append(Artwork.query.get(purchase.id))
+    # print(purchase_id_list)
+    # for art in purchases_list:
+    #     print(art.title)
+    # return redirect(url_for('home'))
+    return render_template("cart.html", purchases_list=purchases_list, purchases=purchases, current_year=current_year)
+
+
 if __name__ == "__main__":
 	app.run(debug=True)
