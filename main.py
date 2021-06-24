@@ -81,6 +81,12 @@ def home():
 
 @app.route('/cart', methods=['POST', 'GET'])
 def cart():
+    if request.method == 'POST':
+        art_id = request.form.get('remove-button')
+        Purchase.query.filter_by(id=art_id).delete()
+        artwork = Artwork.query.get(art_id)
+        artwork.sold = False
+        db.session.commit()
     purchases = Purchase.query.count()
     all_purchases = Purchase.query.all()
     purchase_id_list = []
