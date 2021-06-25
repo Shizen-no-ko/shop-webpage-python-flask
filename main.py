@@ -1,13 +1,20 @@
-from dotenv import load_dotenv
 from flask import Flask, render_template, request, redirect, url_for, flash
+from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
+
 from datetime import datetime
 from random import shuffle
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import Table, Column, Integer, ForeignKey
+from sqlalchemy.orm import relationship
+from dotenv import load_dotenv
+import os
+from forms import RegisterForm, LoginForm
 from flask_wtf import FlaskForm
 from wtforms import SubmitField
 
 
 load_dotenv()
+secret_key = os.getenv("APP_SECRET_KEY")
 # art_list = ["about.png", "boat.png", "bus.png", "elephantus.png", "gojongarr.png", "hana.png", "hula.png", "lenny.png", "leonard.png", "paradies.png", "station.png", "the_handbag.png", "this_is_the_way.png", "zowie.png"]
 # art_path_list = [f"static/images/art/{a}" for a in art_list]
 # title_list = ["I'm about to tell you...", "The Boat House", "The Bus Gang", "Elegypt", "Dr. Gojongarr was an incredibly nice man", "Hana no Koala", "Hula Horse", "The Ballad of Lenny Kowalusky and the Man Sized Critter", "Leonard", "The Catcher of Birds of Paradise", "The Station Master", "The Handbag of the Best Friend of the Boy Who Has the Whole Universe Inside his Mouth", "This is the way we make the sun rise", "Zowie-Kerpowie"]
@@ -27,16 +34,31 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-class Artwork(db.Model):
+
+
+# class Artwork(db.Model):
+#     __tablename__ = "artworks"
+#     id = db.Column(db.Integer, primary_key=True)
+#     title = db.Column(db.String(250), unique=False, nullable=False)
+#     description = db.Column(db.String(1000), nullable=False)
+#     img_url = db.Column(db.String(500), nullable=False)
+#     price = db.Column(db.String(250), nullable=True)
+#     sold = db.Column(db.Boolean, nullable=False)
+
+class User(UserMixin, db.Model):
+    __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(250), unique=False, nullable=False)
-    description = db.Column(db.String(1000), nullable=False)
-    img_url = db.Column(db.String(500), nullable=False)
-    price = db.Column(db.String(250), nullable=True)
-    sold = db.Column(db.Boolean, nullable=False)
+    email = db.Column(db.String(250), nullable=False)
+    password = db.Column(db.String(250), nullable=False)
+    name = db.Column(db.String(250), nullable=False)
+    bought = relationship("Purchase", back_populates="buyer")
 
 class Purchase(db.Model):
+    __tablename__ = "purchases"
     id = db.Column(db.Integer, primary_key=True)
+    buyer_id = Column(Integer, ForeignKey('users.id'))
+    buyer = relationship("User", back_populates="bought")
+
 
 
 
