@@ -4,13 +4,11 @@
 
 <div class="container">
     <div class="card form-card">
-         <h1>Register for an account</h1>
+         <h1>Login to your account</h1>
     <form method="POST" action="{{ url_for('register') }}">
             {{ form.csrf_token }}
         <div class="form-inner-container">
-         <div class="form-element">
-             {{form.name.label}} {{ form.name(placeholder="Enter your name here") }}
-        </div>
+
         <br>
         <div class="form-element">
                         {{form.email.label}} {{ form.email }}

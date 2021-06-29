@@ -157,6 +157,27 @@ section .flex{
        z-index: 100;
 }
 
+.form-card {
+    border-color: var(--blue);
+    height: 350px;
+    margin: -50px auto 20px;
+    padding-top: 0;
+    text-align: center;
+    transform: rotate(0deg);
+    width: 75%;
+}
+
+.form-inner-container{
+    text-align: right;
+    margin: 0 35% 0 auto;
+    width: 50%;
+}
+
+.form-element{
+    margin: 10px 0;
+}
+
+
 .purchase-card{
     border-color: var(--blue);
     height: 150px;

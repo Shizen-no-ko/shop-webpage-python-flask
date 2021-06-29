@@ -24,8 +24,12 @@
                 {% if request.endpoint != 'home'  %}
                 <li><a href="{{ url_for('home') }}">Home</a></li>
                 {% endif %}
-                <li>Register</li>
-                <li>Login</li>
+                {% if request.endpoint != 'register'  %}
+                <li><a href="{{ url_for('register') }}">Register</a></li>
+                  {% endif %}
+                {% if request.endpoint != 'login'  %}
+                <li><a href="{{ url_for('login') }}">Login</a></li>
+                {% endif %}
                 {% if request.endpoint != 'cart'  %}
                 <li><a href="{{ url_for('cart') }}"><i class="fas fa-shopping-cart cart"></i><div id="cart-count">{{ purchases }}</div></a></li>
                 {% endif %}
