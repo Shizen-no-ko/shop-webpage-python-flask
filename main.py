@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
-# from flask_bootstrap import Bootstrap
+from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from random import shuffle
 from flask_sqlalchemy import SQLAlchemy
@@ -32,6 +32,9 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///artworks.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = os.getenv("APP_SECRET_KEY")
+
+login_manager = LoginManager()
+login_manager.init_app(app)
 
 db = SQLAlchemy(app)
 
@@ -81,8 +84,15 @@ def create_art_database():
 
 # create_art_database()
 
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+
+
 @app.route('/', methods=['POST', 'GET'])
 def home():
+    print(request.method)
     if request.method == 'POST':
         art_id = request.form.get('buy-button')
         artwork = Artwork.query.get(art_id)
@@ -127,12 +137,45 @@ def cart():
 @app.route('/register', methods=['POST', 'GET'])
 def register():
     register_form = RegisterForm()
+    if register_form.validate_on_submit():
+        email = register_form.email.data
+        user = User.query.filter_by(email=email).first()
+        if user:
+            flash('You are already registered. Please log-in instead.')
+            return redirect(url_for('login'))
+        password = register_form.password.data
+        hashed_password = generate_password_hash(password, method='pbkdf2:sha256', salt_length=8)
+        new_user = User(email=register_form.email.data, password=hashed_password, name=register_form.name.data)
+        db.session.add(new_user)
+        db.session.commit()
+        login_user(new_user)
+        return redirect(url_for("home"))
     return render_template("register.html", form=register_form, current_year=current_year)
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     login_form = LoginForm()
+    if login_form.validate_on_submit():
+        user = User.query.filter_by(email=login_form.email.data).first()
+        if not user:
+            flash('That email is not valid. Please try again.')
+            return redirect(url_for('login'))
+        login_password = login_form.password.data
+        password_check = check_password_hash(user.password, login_password)
+        if not password_check:
+            flash('Password incorrect. Please try again.')
+            return redirect(url_for('login'))
+        if password_check:
+            login_user(user)
+            print(user.is_authenticated)
+            return redirect(url_for('home'))
     return render_template("login.html", form=login_form, current_year=current_year)
+
+@app.route('/logout', methods=['POST', 'GET'])
+def logout():
+    logout_user()
+    return redirect(url_for('home'))
+
 
 
 if __name__ == "__main__":

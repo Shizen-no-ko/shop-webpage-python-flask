@@ -129,6 +129,18 @@ section .flex{
     transform: scale(0.95);
 }
 
+.log-reg-reminder {
+    display:inline
+}
+
+
+.message{
+    color: red;
+    font-weight: bold;
+    padding: none;
+    margin: none;
+}
+
 .modal-buttons {
     align-items: center;
     bottom: 15px;
@@ -159,8 +171,8 @@ section .flex{
 
 .form-card {
     border-color: var(--blue);
-    height: 350px;
-    margin: -50px auto 20px;
+    height: 400px;
+    margin: -75px auto 20px;
     padding-top: 0;
     text-align: center;
     transform: rotate(0deg);

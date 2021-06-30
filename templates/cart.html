@@ -19,8 +19,14 @@
 {% endfor %}
     <div class="card purchase-card total-card"><h1>Total Price: €{{ total.value }}</h1>
      <form>
+         {% if current_user.is_authenticated %}
             <button class="button">Checkout <i class="far fa-credit-card"></i></button>
-        </form>
+     </form>
+         {% else %}
+              <div class="button log-reg-reminder" >
+        Login/Register to buy
+    </div>
+         {% endif %}
     </div>
 
 </div>
