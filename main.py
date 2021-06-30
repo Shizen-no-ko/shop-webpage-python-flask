@@ -92,7 +92,6 @@ def load_user(user_id):
 
 @app.route('/', methods=['POST', 'GET'])
 def home():
-    print(request.method)
     if request.method == 'POST':
         art_id = request.form.get('buy-button')
         artwork = Artwork.query.get(art_id)
@@ -149,7 +148,10 @@ def register():
         db.session.add(new_user)
         db.session.commit()
         login_user(new_user)
-        return redirect(url_for("home"))
+        if Purchase.query.count() > 0:
+            return redirect(url_for("cart"))
+        else:
+            return redirect(url_for("home"))
     return render_template("register.html", form=register_form, current_year=current_year)
 
 @app.route('/login', methods=['POST', 'GET'])
@@ -168,7 +170,10 @@ def login():
         if password_check:
             login_user(user)
             print(user.is_authenticated)
-            return redirect(url_for('home'))
+            if Purchase.query.count() > 0:
+                return redirect(url_for("cart"))
+            else:
+                return redirect(url_for('home'))
     return render_template("login.html", form=login_form, current_year=current_year)
 
 @app.route('/logout', methods=['POST', 'GET'])
