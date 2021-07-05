@@ -25,9 +25,14 @@
         {% else %}
             <h1>Shopping Cart is Empty</h1>
         {% endif %}
-        <form>
-         {% if current_user.is_authenticated %}
-            <button class="button">Checkout <i class="far fa-credit-card"></i></button>
+
+<!--      </form>-->
+        {% if current_user.is_authenticated %}
+                <form action="{{ url_for('create_checkout_session') }}" method="POST">
+<!--        <form>-->
+
+<!--                      <button type="submit">Checkout</button>-->
+            <button type="submit" class="button">Checkout <i class="far fa-credit-card"></i></button>
      </form>
          {% else %}
               <div class="button log-reg-reminder" >
@@ -37,5 +42,6 @@
     </div>
 
 </div>
+
 
 {% endblock %}

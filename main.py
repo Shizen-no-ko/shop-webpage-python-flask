@@ -19,7 +19,7 @@ stripe.api_key=os.getenv("STRIPE_API_KEY")
 # For maintaining year for copyright notice.
 now = datetime.now()
 current_year = now.strftime("%Y")
-
+checkout_price = 0
 # For initializing artworks database
 # art_list = ["about.png", "boat.png", "bus.png", "elephantus.png", "gojongarr.png", "hana.png", "hula.png", "lenny.png", "leonard.png", "paradies.png", "station.png", "the_handbag.png", "this_is_the_way.png", "zowie.png"]
 # art_path_list = [f"static/images/art/{a}" for a in art_list]
@@ -41,7 +41,6 @@ def create_art_database():
 
 
 app = Flask(__name__)
-
 # Connect to Database
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///artworks.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -166,6 +165,7 @@ def home():
 
 @app.route('/cart', methods=['POST', 'GET'])
 def cart():
+    global checkout_price
     # delete unwanted artworks from cart
     if request.method == 'POST':
         art_id = request.form.get('remove-button')
@@ -191,16 +191,19 @@ def cart():
     purchases_list = []
     for purchase in all_purchases:
         if current_user.is_authenticated:
-            print("purchase.buyer_id")
-            print(type(purchase.buyer_id))
-            print("user_id")
-            print(type(current_user.get_id()))
+            # print("purchase.buyer_id")
+            # print(type(purchase.buyer_id))
+            # print("user_id")
+            # print(type(current_user.get_id()))
             if purchase.buyer_id == int(current_user.get_id()):
-                print("got a match")
+                # print("got a match")
                 purchase_id_list.append(purchase.product_id)
-                purchases_list.append(Artwork.query.get(purchase.product_id))
-                print("Purchases list is")
-                print(purchases_list)
+                artwork = Artwork.query.get(purchase.product_id)
+                purchases_list.append(artwork)
+                checkout_price += int(float(artwork.price) * 100)
+                # purchases_list.append(Artwork.query.get(purchase.product_id))
+                # print("Purchases list is")
+                # print(purchases_list)
         else:
             if not purchase.buyer_id:
                 purchase_id_list.append(purchase.product_id)
@@ -288,15 +291,25 @@ def cancel():
 
 @app.route('/success', methods=['GET'])
 def success():
+    global checkout_price
+    checkout_price = 0
+    user_id_as_int = int(current_user.get_id())
+    all_purchases = Purchase.query.all()
+    for purchase in all_purchases:
+        if purchase.buyer_id == user_id_as_int:
+            artwork = Artwork.query.get(purchase.product_id)
+            artwork.sold = True
+            artwork.buyer_id = str(user_id_as_int)
+            purchase.delete()
+    db.session.commit()
     return render_template("success.html", current_year=current_year)
 
 
 @app.route('/create-checkout-session', methods=['POST'])
 def create_checkout_session():
-    total_price = 0
-    all_purchases = Purchase.query.all()
-    for purchase in all_purchases:
-        total_price += round(Artwork.query.get(purchase.id).price, 2)
+    global checkout_price
+    success_url = os.path.join(request.url_root, 'success')
+    cancel_url = os.path.join(request.url_root, 'cancel')
     try:
         checkout_session = stripe.checkout.Session.create(
             payment_method_types=['card'],
@@ -304,7 +317,7 @@ def create_checkout_session():
                 {
                     'price_data': {
                         'currency': 'eur',
-                        'unit_amount': total_price,
+                        'unit_amount': checkout_price,
                         'product_data': {
                             'name': 'Artwork from Ātoshoppu',
                             'images': ['static/images/art/atoshoppu_logo.png'],
@@ -314,12 +327,15 @@ def create_checkout_session():
                 },
             ],
             mode='payment',
-            success_url=url_for('success'),
-            cancel_url=url_for('cancel'),
+            success_url=success_url,
+            cancel_url=cancel_url,
         )
-        return jsonify({'id': checkout_session.id})
+        return redirect(checkout_session.url, code=303)
     except Exception as e:
         return jsonify(error=str(e)), 403
+
+
+
 
 
 
