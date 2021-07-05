@@ -287,7 +287,16 @@ def logout():
 
 @app.route('/cancel', methods=['GET'])
 def cancel():
-    return render_template("cancel.html", current_year=current_year)
+    global checkout_price
+    checkout_price = 0
+    purchases = 0
+    all_purchases = Purchase.query.all()
+    for purchase in all_purchases:
+        if purchase.buyer_id == int(current_user.get_id()):
+            purchases += 1
+    print("purchases is")
+    print(purchases)
+    return render_template("cancel.html", purchases=purchases, current_year=current_year)
 
 @app.route('/success', methods=['GET'])
 def success():
