@@ -130,7 +130,7 @@ section .flex{
 }
 
 .log-reg-reminder {
-    display:inline
+    display:inline;
 }
 
 
@@ -267,6 +267,13 @@ section .flex{
 .container {
     margin: 0 auto;
     max-width: 1000px;
+}
+
+.title{
+    margin-top: 0;
+    position: relative;
+    text-align: center;
+    z-index: 500;
 }
 
 .flex{

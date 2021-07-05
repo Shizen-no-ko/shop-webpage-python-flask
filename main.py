@@ -4,75 +4,28 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from random import shuffle
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Table, Column, Integer, ForeignKey
+from sqlalchemy import Table, Column, Integer, ForeignKey, and_
 from sqlalchemy.orm import relationship
 from dotenv import load_dotenv
 import os
 import stripe
 from forms import RegisterForm, LoginForm
-from flask_wtf import FlaskForm
-from wtforms import SubmitField
+# from flask_wtf import FlaskForm
+# from wtforms import SubmitField
 
 
 load_dotenv()
 stripe.api_key=os.getenv("STRIPE_API_KEY")
-
-art_list = ["about.png", "boat.png", "bus.png", "elephantus.png", "gojongarr.png", "hana.png", "hula.png", "lenny.png", "leonard.png", "paradies.png", "station.png", "the_handbag.png", "this_is_the_way.png", "zowie.png"]
-art_path_list = [f"static/images/art/{a}" for a in art_list]
-title_list = ["I'm about to tell you...", "The Boat House", "The Bus Gang", "Elegypt", "Dr. Gojongarr was an incredibly nice man", "Hana no Koala", "Hula Horse", "The Ballad of Lenny Kowalusky and the Man Sized Critter", "Leonard", "The Catcher of Birds of Paradise", "The Station Master", "The Handbag of the Best Friend of the Boy Who Has the Whole Universe Inside his Mouth", "This is the way we make the sun rise", "Zowie-Kerpowie"]
-description_list = ["2021, Oil on Canvas, 100x80cm"]
-price_list = ["1000", "1000", "1500", "2500", "2000", "2500", "1000", "2000", "2500", "1500", "1000", "3500", "2500", "1500"]
-
-# shuffle(art_path_list)
-# print(art_path_list)
+# For maintaining year for copyright notice.
 now = datetime.now()
 current_year = now.strftime("%Y")
 
-app = Flask(__name__)
-
-# Connect to Database
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///artworks.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.secret_key = os.getenv("APP_SECRET_KEY")
-
-
-login_manager = LoginManager()
-login_manager.init_app(app)
-
-db = SQLAlchemy(app)
-
-
-
-class Artwork(db.Model):
-    __tablename__ = "artworks"
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(250), unique=False, nullable=False)
-    description = db.Column(db.String(1000), nullable=False)
-    img_url = db.Column(db.String(500), nullable=False)
-    price = db.Column(db.String(250), nullable=True)
-    sold = db.Column(db.Boolean, nullable=False)
-
-class User(UserMixin, db.Model):
-    __tablename__ = "users"
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(250), nullable=False)
-    password = db.Column(db.String(250), nullable=False)
-    name = db.Column(db.String(250), nullable=False)
-    bought = relationship("Purchase", back_populates="buyer")
-
-class Purchase(db.Model):
-    __tablename__ = "purchases"
-    id = db.Column(db.Integer, primary_key=True)
-    product_id = Column(db.Integer)
-    buyer_id = Column(Integer, ForeignKey('users.id'))
-    buyer = relationship("User", back_populates="bought")
-
-
-
-
-
-db.create_all()
-
+# For initializing artworks database
+# art_list = ["about.png", "boat.png", "bus.png", "elephantus.png", "gojongarr.png", "hana.png", "hula.png", "lenny.png", "leonard.png", "paradies.png", "station.png", "the_handbag.png", "this_is_the_way.png", "zowie.png"]
+# art_path_list = [f"static/images/art/{a}" for a in art_list]
+# title_list = ["I'm about to tell you...", "The Boat House", "The Bus Gang", "Elegypt", "Dr. Gojongarr was an incredibly nice man", "Hana no Koala", "Hula Horse", "The Ballad of Lenny Kowalusky and the Man Sized Critter", "Leonard", "The Catcher of Birds of Paradise", "The Station Master", "The Handbag of the Best Friend of the Boy Who Has the Whole Universe Inside his Mouth", "This is the way we make the sun rise", "Zowie-Kerpowie"]
+# description_list = ["2021, Oil on Canvas, 100x80cm"]
+# price_list = ["1000", "1000", "1500", "2500", "2000", "2500", "1000", "2000", "2500", "1500", "1000", "3500", "2500", "1500"]
 
 def create_art_database():
     for a in range(len(art_list)):
@@ -86,18 +39,77 @@ def create_art_database():
         db.session.add(new_artwork)
         db.session.commit()
 
+
+app = Flask(__name__)
+
+# Connect to Database
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///artworks.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.secret_key = os.getenv("APP_SECRET_KEY")
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+db = SQLAlchemy(app)
+
+# Database models
+class Artwork(db.Model):
+    __tablename__ = "artworks"
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(250), unique=False, nullable=False)
+    description = db.Column(db.String(1000), nullable=False)
+    img_url = db.Column(db.String(500), nullable=False)
+    price = db.Column(db.String(250), nullable=True)
+    sold = db.Column(db.Boolean, nullable=False)
+    buyer_id = Column(Integer, ForeignKey('users.id'))
+    buyer = relationship("User", back_populates="bought")
+
+
+class User(UserMixin, db.Model):
+    __tablename__ = "users"
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(250), nullable=False)
+    password = db.Column(db.String(250), nullable=False)
+    name = db.Column(db.String(250), nullable=False)
+    reserved = relationship("Purchase", back_populates="buyer")
+    bought = relationship("Artwork", back_populates="buyer")
+
+
+class Purchase(db.Model):
+    __tablename__ = "purchases"
+    id = db.Column(db.Integer, primary_key=True)
+    product_id = Column(db.Integer)
+    buyer_id = Column(Integer, ForeignKey('users.id'))
+    buyer = relationship("User", back_populates="reserved")
+
+
+
+
+# Initialize database
+# db.create_all()
+
+# Populate artwork stock
+# create_art_database()
+
+# Updates cart items, from pre-login state, upon login
 def update_user_purchases():
     all_purchases = Purchase.query.all()
     for purchase in all_purchases:
         if not purchase.buyer_id:
             purchase.buyer_id = current_user.get_id()
+            db.session.commit()
 
-create_art_database()
 
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+# if current_user.is_authenticated:
+    #     purchases = Purchase.query.filter_by(buyer_id=current_user.get_id()).count()
+    # else:
+    #     purchases = Purchase.query.filter_by(buyer_id == None).count()
+    # purchases = Purchase.query.count()
+    # all_artworks = Artwork.query.all()
 
 @app.route('/', methods=['POST', 'GET'])
 def home():
@@ -116,42 +128,40 @@ def home():
                 )
         db.session.add(new_purchase)
         db.session.commit()
-    # if current_user.is_authenticated:
-    #     purchases = Purchase.query.filter_by(buyer_id=current_user.get_id()).count()
-    # else:
-    #     purchases = Purchase.query.filter_by(buyer_id == None).count()
-    # purchases = Purchase.query.count()
-    # all_artworks = Artwork.query.all()
-    art_list = []
+    list_of_art = []
     art_id_list = []
     purchases = 0
     all_purchases = Purchase.query.all()
     for purchase in all_purchases:
         # if user is logged-in, append only artworks not in their shopping cart
         if current_user.is_authenticated:
-            if purchase.buyer_id != current_user.get_id():
+            if purchase.buyer_id == int(current_user.get_id()):
                 art_id_list.append(purchase.product_id)
-            # if the purchase is in their shopping cart, increment purchases counter
-            else:
                 purchases += 1
+            # if the purchase is in their shopping cart, increment purchases counter
+            # else:
+            #     purchases += 1
         # otherwise, as the un-logged-in shopping cart has no buyer id, append only those with an id
         else:
-            if purchase.buyer_id:
+            if not purchase.buyer_id:
                 art_id_list.append(purchase.product_id)
+                purchases += 1
             # if the purchase has no id then it is in their shopping cart,
             # therefore, increment purchases counter
-            else:
-                purchases += 1
+            # else:
+            #     purchases += 1
     art_id_list = list(set(art_id_list))
-    for art_id in art_id_list:
-        art_list.append(Artwork.query.get(art_id))
-    # for artwork in all_artworks:
-    #     if not artwork.sold:
-    #         art_list.append(artwork)
+    # for art_id in art_id_list:
+    #     art_list.append(Artwork.query.get(art_id))
+    all_artworks = Artwork.query.all()
+    for artwork in all_artworks:
+        if artwork.id not in art_id_list:
+            list_of_art.append(artwork)
     # list comprehension, only art which is not sold should be rendered.
-    art_list = [art for art in art_list if not art.sold]
-    shuffle(art_list)
-    return render_template("index.html", art_list=art_list, purchases=purchases, current_year=current_year)
+    final_art_list = [art for art in list_of_art if not art.sold]
+    print(final_art_list)
+    shuffle(final_art_list)
+    return render_template("index.html", art_list=final_art_list, purchases=purchases, current_year=current_year)
 
 
 @app.route('/cart', methods=['POST', 'GET'])
@@ -164,7 +174,11 @@ def cart():
             Purchase.query.filter_by(product_id=art_id).filter_by(buyer_id=current_user.get_id()).delete()
         # otherwise, if not logged-in just delete temporarily stored instance
         else:
-            Purchase.query.filter_by(product_id=art_id).filter_by(buyer_id == None).delete()
+            # query = Purchase.query.join(Purchase.spaces).filter(User.username == 'Bob', Space.name == 'Mainspace').first()
+            #
+            # query.delete()
+            Purchase.query.filter(Purchase.product_id == art_id).filter(Purchase.buyer_id == None).delete()
+            # Purchase.query.filter_by(product_id=art_id).filter_by(buyer_id == None).delete()
         # artwork = Artwork.query.get(art_id)
         # artwork.sold = False
         db.session.commit()
@@ -177,18 +191,25 @@ def cart():
     purchases_list = []
     for purchase in all_purchases:
         if current_user.is_authenticated:
-            if purchase.buyer_id == current_user.get_id():
+            print("purchase.buyer_id")
+            print(type(purchase.buyer_id))
+            print("user_id")
+            print(type(current_user.get_id()))
+            if purchase.buyer_id == int(current_user.get_id()):
+                print("got a match")
                 purchase_id_list.append(purchase.product_id)
                 purchases_list.append(Artwork.query.get(purchase.product_id))
+                print("Purchases list is")
+                print(purchases_list)
         else:
             if not purchase.buyer_id:
                 purchase_id_list.append(purchase.product_id)
                 purchases_list.append(Artwork.query.get(purchase.product_id))
-        purchases = len(purchase_id_list)
+        # purchases = len(purchase_id_list)
         # append product_id to the render list for the shopping cart
         # purchase_id_list.append(purchase.product_id)
         # purchases_list.append(Artwork.query.get(purchase.product_id))
-    return render_template("cart.html", purchases_list=purchases_list, purchases=purchases, current_year=current_year)
+    return render_template("cart.html", purchases_list=purchases_list, purchases=len(purchases_list), current_year=current_year)
 
 
 @app.route('/register', methods=['POST', 'GET'])
@@ -207,8 +228,10 @@ def register():
         db.session.commit()
         login_user(new_user)
         update_user_purchases()
-        if Purchase.query.count() > 0:
+        if Purchase.query.filter(Purchase.buyer_id == current_user.get_id()).count() > 0:
             return redirect(url_for("cart"))
+        # if Purchase.query.count() > 0:
+        #     return redirect(url_for("cart"))
         else:
             return redirect(url_for("home"))
     return render_template("register.html", form=register_form, current_year=current_year)
@@ -252,7 +275,9 @@ def logout():
     all_purchases = Purchase.query.all()
     for purchase in all_purchases:
         if not purchase.buyer_id:
-            purchase.delete()
+            Purchase.query.filter_by(id=purchase.id).delete()
+            # purchase.delete()
+            db.session.commit()
     logout_user()
     return redirect(url_for('home'))
 
@@ -297,5 +322,8 @@ def create_checkout_session():
         return jsonify(error=str(e)), 403
 
 
+
 if __name__ == "__main__":
 	app.run(debug=True)
+
+

@@ -2,6 +2,7 @@
 {% block content %}
 {% set total= namespace(value=0) %}
 <div class="container">
+    <h1 class="title">Shopping Cart</h1>
 {% for purchase in purchases_list %}
 {% set total.value = total.value + purchase.price | int %}
 <div class="card purchase-card">
@@ -17,8 +18,14 @@
     </div>
 </div>
 {% endfor %}
-    <div class="card purchase-card total-card"><h1>Total Price: €{{ total.value }}</h1>
-     <form>
+
+    <div class="card purchase-card total-card">
+        {% if purchases > 0 %}
+        <h1>Total Price: €{{ total.value }}</h1>
+        {% else %}
+            <h1>Shopping Cart is Empty</h1>
+        {% endif %}
+        <form>
          {% if current_user.is_authenticated %}
             <button class="button">Checkout <i class="far fa-credit-card"></i></button>
      </form>
