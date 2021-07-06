@@ -1,13 +1,7 @@
-/*font-family: 'Changa', sans-serif;
-font-family: 'Josefin Sans', sans-serif;
-font-family: 'Lato', sans-serif;
-font-family: 'Montserrat', sans-serif;
-font-family: 'Montserrat Alternates', sans-serif;*/
 html{
     min-height: 100%;
     position: relative;
 }
-
 
 :root {
   --blue: #3ec1d3;
@@ -18,6 +12,7 @@ html{
   --page-font: 'Lato', sans-serif;
 }
 
+/*tags*/
 a {
     color: var(--pale);
     text-decoration: none;
@@ -69,7 +64,6 @@ img{
     object-position: 0 0;
     width: 100%;
     height: 200px;
-    /*top: 0;*/
 }
 
 nav {
@@ -107,6 +101,7 @@ section .flex{
     flex-wrap: wrap;
 }
 
+/*classes*/
 .button{
     background-color: var(--orange);
     border: none;
@@ -129,30 +124,6 @@ section .flex{
     transform: scale(0.95);
 }
 
-.log-reg-reminder {
-    display:inline;
-}
-
-
-.message{
-    color: red;
-    font-weight: bold;
-    padding: none;
-    margin: none;
-}
-
-.modal-buttons {
-    align-items: center;
-    bottom: 15px;
-    flex-direction: row;
-    justify-content: space-between;
-    display: flex;
-    margin: 0 auto;
-    padding: 0 30px 0 0px;
-    position: absolute;
-    width: 100%;
-}
-
 .card{
        animation: slide-in 0.5s ease-in-out;
        background-color: var(--pale);
@@ -169,6 +140,22 @@ section .flex{
        z-index: 100;
 }
 
+.card:hover{
+    border: var(--pink) 3px solid;
+    transform: rotate(0deg);
+}
+
+.card h3{
+    color: var(--blue);
+    padding: 0;
+    position: relative;
+    top: -1rem;
+}
+
+.card h4{
+    margin: 15px 5px 10px;
+}
+
 .cancel-card{
     height: auto !important;
    margin-top: 100px !important;
@@ -176,6 +163,17 @@ section .flex{
 
 .cancel-card h2{
     color: var(--pink);
+}
+
+.container {
+    margin: 0 auto;
+    max-width: 1000px;
+}
+
+.flex{
+    align-items: center;
+    display: flex;
+    height: 100%;
 }
 
 .form-card {
@@ -198,6 +196,43 @@ section .flex{
     margin: 10px 0;
 }
 
+.hidden {
+    display: none;
+}
+
+.log-reg-reminder {
+    display:inline;
+}
+
+.message{
+    color: red;
+    font-weight: bold;
+    padding: none;
+    margin: none;
+}
+
+.modal-buttons {
+    align-items: center;
+    bottom: 15px;
+    flex-direction: row;
+    justify-content: space-between;
+    display: flex;
+    margin: 0 auto;
+    padding: 0 30px 0 0px;
+    position: absolute;
+    width: 100%;
+}
+
+.name-box{
+    background-color: var(--pale);
+    border-radius: 5px;
+    height: 1.7rem;
+    left: 10px;
+    position: absolute;
+    text-align: center;
+    top: 10px;
+    width: 180px;
+}
 
 .purchase-card{
     border-color: var(--blue);
@@ -208,8 +243,9 @@ section .flex{
     width: 75%;
 }
 
-
-
+.purchase-card h3 {
+    color: var(--pink);
+}
 
 .purchase-details{
     height: 100%;
@@ -219,7 +255,12 @@ section .flex{
     text-align: justify;
     top: 0;
     width: 65%;
+}
 
+.purchase-details button{
+    position: absolute;
+    right:0;
+    bottom:10px;;
 }
 
 .purchase-img-container{
@@ -238,21 +279,54 @@ section .flex{
     width: auto;
 }
 
-
-.card:hover{
-    border: var(--pink) 3px solid;
-    transform: rotate(0deg);
+.show {
+    display: block !important;
 }
 
-.card h3{
-    color: var(--blue);
-    padding: 0;
+.slope {
+    background-color: var(--pale);
+    height: 100px;
     position: relative;
-    top: -1rem;
+    right: -20px;
+    top: 15px;
+    transform: rotate(-4deg);
 }
 
-.card h4{
-    margin: 15px 5px 10px;
+.title{
+    margin-top: 0;
+    position: relative;
+    text-align: center;
+    z-index: 500;
+}
+
+.total-card{
+    margin-bottom: 100px;
+}
+
+.total-card button{
+    background-color: red;
+    bottom: 8px;
+    position: absolute;
+    right: 3%;
+}
+
+
+/*ids*/
+#backdrop{
+    background-color: black;
+    display: none;
+    opacity: 0.5;
+    overflow: hidden;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 0;
+    z-index: 250;
+}
+
+#buy-button{
+    background-color: var(--pink);
 }
 
 #cart-count{
@@ -272,73 +346,6 @@ section .flex{
     width: 1rem;
 }
 
-
-.container {
-    margin: 0 auto;
-    max-width: 1000px;
-}
-
-.title{
-    margin-top: 0;
-    position: relative;
-    text-align: center;
-    z-index: 500;
-}
-
-.flex{
-    align-items: center;
-    display: flex;
-    height: 100%;
-}
-
-.hidden {
-    display: none;
-}
-
-#backdrop{
-    background-color: black;
-    display: none;
-    /*height: 100%;*/
-    opacity: 0.5;
-    overflow: hidden;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    top: 0;
-    /*width: 100%;*/
-    z-index: 250;
-}
-
-#buy-button{
-    background-color: var(--pink);
-}
-
-.purchase-card h3 {
-    color: var(--pink);
-}
-
-.purchase-details button{
-    position: absolute;
-    right:0;
-    bottom:10px;;
-}
-
-.show {
-    display: block !important;
-}
-
-.total-card{
-    margin-bottom: 100px;
-}
-
-.total-card button{
-    background-color: red;
-    bottom: 8px;
-    position: absolute;
-    right: 3%;
-}
-
 #modal-card{
         display: none;
         height: 80vh;
@@ -355,14 +362,6 @@ section .flex{
     color: var(--pink);
 }
 
-#close-modal-button {
-    /*display: inline;
-    margin: 0 auto;
-    position: absolute;
-    left: 15px;
-    padding: 0 auto;*/
-}
-
 #modal-image {
     display: block;
     height: 50vh;
@@ -371,30 +370,6 @@ section .flex{
     object-fit: contain;
     object-position: center;
 }
-
-.name-box{
-    background-color: var(--pale);
-    border-radius: 5px;
-    height: 1.7rem;
-    left: 10px;
-    position: absolute;
-    text-align: center;
-    top: 10px;
-    width: 180px;
-
-
-}
-
-.slope {
-    background-color: var(--pale);
-    height: 100px;
-    position: relative;
-    right: -20px;
-    top: 15px;
-    transform: rotate(-4deg);
-}
-
-
 
 /* Animations */
 @keyframes slide-in{
