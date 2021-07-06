@@ -1,47 +1,47 @@
 {% extends 'base.html' %}
+
 {% block content %}
+
+<!--total variable for displaying cart total-->
 {% set total= namespace(value=0) %}
 <div class="container">
     <h1 class="title">Shopping Cart</h1>
-{% for purchase in purchases_list %}
-{% set total.value = total.value + purchase.price | int %}
-<div class="card purchase-card">
-    <div class="purchase-img-container">
-         <img src="{{purchase.img_url}}">
+<!--    increment total price from rendered items-->
+    {% for purchase in purchases_list %}
+    {% set total.value = total.value + purchase.price | int %}
+    <div class="card purchase-card">
+        <div class="purchase-img-container">
+            <img src="{{purchase.img_url}}">
+        </div>
+        <div class="purchase-details">
+            <h3>{{ purchase.title }}</h3>
+            <h4>€{{ purchase.price }}</h4>
+            <form action="{{ url_for('cart') }}" method="post">
+                <button class="button" value="{{ purchase.id }}" name="remove-button">Remove <i
+                        class="fas fa-trash-alt"></i></button>
+            </form>
+        </div>
     </div>
-    <div class="purchase-details">
-        <h3>{{ purchase.title }}</h3>
-        <h4>€{{ purchase.price }}</h4>
-        <form action="{{ url_for('cart') }}" method="post">
-            <button class="button" value="{{ purchase.id }}" name="remove-button">Remove <i class="fas fa-trash-alt"></i></button>
-        </form>
-    </div>
-</div>
-{% endfor %}
-
+    {% endfor %}
     <div class="card purchase-card total-card">
+<!--        conditional rendering according to full or empty cart-->
         {% if purchases > 0 %}
         <h1>Total Price: €{{ total.value }}</h1>
         {% else %}
-            <h1>Shopping Cart is Empty</h1>
+        <h1>Shopping Cart is Empty</h1>
         {% endif %}
-
-<!--      </form>-->
+<!--        enable checkout button only if logged in-->
         {% if current_user.is_authenticated %}
-                <form action="{{ url_for('create_checkout_session') }}" method="POST">
-<!--        <form>-->
-
-<!--                      <button type="submit">Checkout</button>-->
+        <form action="{{ url_for('create_checkout_session') }}" method="POST">
             <button type="submit" class="button">Checkout <i class="far fa-credit-card"></i></button>
-     </form>
-         {% else %}
-              <div class="button log-reg-reminder" >
-        Login/Register to buy
+        </form>
+<!--        otherwise set non-functioning reminder button-->
+        {% else %}
+        <div class="button log-reg-reminder">
+            Login/Register to buy
+        </div>
+        {% endif %}
     </div>
-         {% endif %}
-    </div>
-
 </div>
-
 
 {% endblock %}
