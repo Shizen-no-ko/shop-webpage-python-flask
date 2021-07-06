@@ -4,16 +4,15 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from random import shuffle
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Table, Column, Integer, ForeignKey, and_
+from sqlalchemy import Column, Integer, ForeignKey
 from sqlalchemy.orm import relationship
 from dotenv import load_dotenv
 import os
 import stripe
 from forms import RegisterForm, LoginForm
-# from flask_wtf import FlaskForm
-# from wtforms import SubmitField
 
 
+# load environment variables
 load_dotenv()
 stripe.api_key=os.getenv("STRIPE_API_KEY")
 # For maintaining year for copyright notice.
@@ -93,6 +92,8 @@ class Purchase(db.Model):
 # Updates cart items, from pre-login state, upon login
 def update_user_purchases():
     all_purchases = Purchase.query.all()
+    # iterate through purchase table and any items
+    # without buyer-id set to current user id
     for purchase in all_purchases:
         if not purchase.buyer_id:
             purchase.buyer_id = current_user.get_id()
@@ -103,19 +104,12 @@ def update_user_purchases():
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-# if current_user.is_authenticated:
-    #     purchases = Purchase.query.filter_by(buyer_id=current_user.get_id()).count()
-    # else:
-    #     purchases = Purchase.query.filter_by(buyer_id == None).count()
-    # purchases = Purchase.query.count()
-    # all_artworks = Artwork.query.all()
 
 @app.route('/', methods=['POST', 'GET'])
 def home():
     if request.method == 'POST':
+        # get artwork id passed from button
         art_id = request.form.get('buy-button')
-        # artwork = Artwork.query.get(art_id)
-        # artwork.sold = True
         if current_user.is_authenticated:
             new_purchase = Purchase(
                 product_id=art_id,
@@ -132,33 +126,30 @@ def home():
     purchases = 0
     all_purchases = Purchase.query.all()
     for purchase in all_purchases:
-        # if user is logged-in, append only artworks not in their shopping cart
+        # if user is logged-in, append only artworks not in
+        # their shopping cart so that only these render in home page
         if current_user.is_authenticated:
             if purchase.buyer_id == int(current_user.get_id()):
                 art_id_list.append(purchase.product_id)
                 purchases += 1
-            # if the purchase is in their shopping cart, increment purchases counter
-            # else:
-            #     purchases += 1
-        # otherwise, as the un-logged-in shopping cart has no buyer id, append only those with an id
+        # if nobody is logged in, only append the artworks which
+        # do not have a buyer id, as these are the only ones in
+        # the non-logged-in cart
         else:
             if not purchase.buyer_id:
                 art_id_list.append(purchase.product_id)
                 purchases += 1
-            # if the purchase has no id then it is in their shopping cart,
-            # therefore, increment purchases counter
-            # else:
-            #     purchases += 1
+    # create list of unique ids of artworks not to
+    # include in the home page render
     art_id_list = list(set(art_id_list))
-    # for art_id in art_id_list:
-    #     art_list.append(Artwork.query.get(art_id))
     all_artworks = Artwork.query.all()
+    # create list of artworks which are not in the exclude list
     for artwork in all_artworks:
         if artwork.id not in art_id_list:
             list_of_art.append(artwork)
     # list comprehension, only art which is not sold should be rendered.
     final_art_list = [art for art in list_of_art if not art.sold]
-    print(final_art_list)
+    # shuffle, so that each new render presents art in different order
     shuffle(final_art_list)
     return render_template("index.html", art_list=final_art_list, purchases=purchases, current_year=current_year)
 
@@ -168,51 +159,34 @@ def cart():
     global checkout_price
     # delete unwanted artworks from cart
     if request.method == 'POST':
+        # get id for artwork-to-remove, passed by the button
         art_id = request.form.get('remove-button')
         # delete the instance of the artwork which has relationship with logged-in user
         if current_user.is_authenticated:
             Purchase.query.filter_by(product_id=art_id).filter_by(buyer_id=current_user.get_id()).delete()
         # otherwise, if not logged-in just delete temporarily stored instance
         else:
-            # query = Purchase.query.join(Purchase.spaces).filter(User.username == 'Bob', Space.name == 'Mainspace').first()
-            #
-            # query.delete()
             Purchase.query.filter(Purchase.product_id == art_id).filter(Purchase.buyer_id == None).delete()
-            # Purchase.query.filter_by(product_id=art_id).filter_by(buyer_id == None).delete()
-        # artwork = Artwork.query.get(art_id)
-        # artwork.sold = False
         db.session.commit()
-    # if current_user.is_authenticated:
-    #     purchases = Purchase.query.filter_by(buyer_id=current_user.get_id()).count()
-    # else:
-    #     purchases = Purchase.query.filter_by(buyer_id == None).count()
     all_purchases = Purchase.query.all()
     purchase_id_list = []
     purchases_list = []
+    # iterate through purchases table
     for purchase in all_purchases:
         if current_user.is_authenticated:
-            # print("purchase.buyer_id")
-            # print(type(purchase.buyer_id))
-            # print("user_id")
-            # print(type(current_user.get_id()))
+            # if a user is logged in, gather only the artworks
+            # linked to the current user, for rendering in the cart, and increment checkout price
             if purchase.buyer_id == int(current_user.get_id()):
-                # print("got a match")
                 purchase_id_list.append(purchase.product_id)
                 artwork = Artwork.query.get(purchase.product_id)
                 purchases_list.append(artwork)
                 checkout_price += int(float(artwork.price) * 100)
-                # purchases_list.append(Artwork.query.get(purchase.product_id))
-                # print("Purchases list is")
-                # print(purchases_list)
+        # otherwise only render the items without a buyer id
         else:
             if not purchase.buyer_id:
                 purchase_id_list.append(purchase.product_id)
                 purchases_list.append(Artwork.query.get(purchase.product_id))
-        # purchases = len(purchase_id_list)
-        # append product_id to the render list for the shopping cart
-        # purchase_id_list.append(purchase.product_id)
-        # purchases_list.append(Artwork.query.get(purchase.product_id))
-    return render_template("cart.html", purchases_list=purchases_list, purchases=len(purchases_list), current_year=current_year)
+        return render_template("cart.html", purchases_list=purchases_list, purchases=len(purchases_list), current_year=current_year)
 
 
 @app.route('/register', methods=['POST', 'GET'])
@@ -220,21 +194,27 @@ def register():
     register_form = RegisterForm()
     if register_form.validate_on_submit():
         email = register_form.email.data
+        # check if user already exists
         user = User.query.filter_by(email=email).first()
+        # if so, flash message and redirect to login
         if user:
             flash('You are already registered. Please log-in instead.')
             return redirect(url_for('login'))
+        # otherwise, hash password and create new user
         password = register_form.password.data
         hashed_password = generate_password_hash(password, method='pbkdf2:sha256', salt_length=8)
         new_user = User(email=register_form.email.data, password=hashed_password, name=register_form.name.data)
         db.session.add(new_user)
         db.session.commit()
+        # login user
         login_user(new_user)
+        # add any items that were in the cart before login,
+        # to the user's items in the purchase table
         update_user_purchases()
+        # if items in users cart, redirect to cart
         if Purchase.query.filter(Purchase.buyer_id == current_user.get_id()).count() > 0:
             return redirect(url_for("cart"))
-        # if Purchase.query.count() > 0:
-        #     return redirect(url_for("cart"))
+        # otherwise, redirect to home
         else:
             return redirect(url_for("home"))
     return render_template("register.html", form=register_form, current_year=current_year)
@@ -245,22 +225,21 @@ def login():
     login_form = LoginForm()
     if login_form.validate_on_submit():
         user = User.query.filter_by(email=login_form.email.data).first()
+        # check if user exists in database, if not, redirect to try again
         if not user:
             flash('That email is not valid. Please try again.')
             return redirect(url_for('login'))
+        # compare entered password with stored password
         login_password = login_form.password.data
         password_check = check_password_hash(user.password, login_password)
+        # redirect for wrong password
         if not password_check:
             flash('Password incorrect. Please try again.')
             return redirect(url_for('login'))
         if password_check:
             login_user(user)
+            # add any cart items from pre-login, to users cart
             update_user_purchases()
-            # print(user.is_authenticated)
-            # all_purchases = Purchase.query.all()
-            # for purchase in all_purchases:
-            #     if not purchase.buyer_id:
-            #         purchase.buyer_id = current_user.get_id()
             if Purchase.query.count() > 0:
                 return redirect(url_for("cart"))
             else:
@@ -270,16 +249,11 @@ def login():
 
 @app.route('/logout', methods=['POST', 'GET'])
 def logout():
-    # reset not sold items to not sold
-    # clear out purchases
-    # db.session.query(Purchase).delete()
-    # db.session.commit()
-    # as each item in shop is unique, don't want to store for later date
     all_purchases = Purchase.query.all()
     for purchase in all_purchases:
+        # delete all items from purchase table which don't have buyer
         if not purchase.buyer_id:
             Purchase.query.filter_by(id=purchase.id).delete()
-            # purchase.delete()
             db.session.commit()
     logout_user()
     return redirect(url_for('home'))
@@ -288,35 +262,41 @@ def logout():
 @app.route('/cancel', methods=['GET'])
 def cancel():
     global checkout_price
+    # reset checkout price
     checkout_price = 0
+    # set purchases amount for cart icon counter display
     purchases = 0
     all_purchases = Purchase.query.all()
     for purchase in all_purchases:
         if purchase.buyer_id == int(current_user.get_id()):
             purchases += 1
-    print("purchases is")
-    print(purchases)
     return render_template("cancel.html", purchases=purchases, current_year=current_year)
 
 @app.route('/success', methods=['GET'])
 def success():
     global checkout_price
+    # after successful checkout, clear cart and total
     checkout_price = 0
     user_id_as_int = int(current_user.get_id())
+    # reset purchases count for cart icon display
+    purchases = 0
     all_purchases = Purchase.query.all()
     for purchase in all_purchases:
         if purchase.buyer_id == user_id_as_int:
+            # set all bought artworks to 'Sold', and set buyer_id to the sold artwork
             artwork = Artwork.query.get(purchase.product_id)
             artwork.sold = True
             artwork.buyer_id = str(user_id_as_int)
-            purchase.delete()
+            # delete bought artwork from buyers cart
+            Purchase.query.filter_by(id=purchase.id).delete()
     db.session.commit()
-    return render_template("success.html", current_year=current_year)
+    return render_template("success.html", purchases=purchases, current_year=current_year)
 
-
+# Stripe checkout session
 @app.route('/create-checkout-session', methods=['POST'])
 def create_checkout_session():
     global checkout_price
+    # generate success and cancel paths
     success_url = os.path.join(request.url_root, 'success')
     cancel_url = os.path.join(request.url_root, 'cancel')
     try:
@@ -344,11 +324,7 @@ def create_checkout_session():
         return jsonify(error=str(e)), 403
 
 
-
-
-
-
 if __name__ == "__main__":
-	app.run(debug=True)
+    app.run(debug=True)
 
 
