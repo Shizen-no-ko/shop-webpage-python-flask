@@ -100,6 +100,14 @@ def update_user_purchases():
             db.session.commit()
 
 
+def get_purchase_count():
+    purchases = 0
+    all_purchases = Purchase.query.all()
+    for purchase in all_purchases:
+        if not purchase.buyer_id:
+            purchases += 1
+    return purchases
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -217,7 +225,8 @@ def register():
         # otherwise, redirect to home
         else:
             return redirect(url_for("home"))
-    return render_template("register.html", form=register_form, current_year=current_year)
+    purchases = get_purchase_count()
+    return render_template("register.html", form=register_form, purchases=purchases, current_year=current_year)
 
 
 @app.route('/login', methods=['POST', 'GET'])
@@ -244,7 +253,8 @@ def login():
                 return redirect(url_for("cart"))
             else:
                 return redirect(url_for('home'))
-    return render_template("login.html", form=login_form, current_year=current_year)
+    purchases = get_purchase_count()
+    return render_template("login.html", form=login_form, purchases=purchases, current_year=current_year)
 
 
 @app.route('/logout', methods=['POST', 'GET'])

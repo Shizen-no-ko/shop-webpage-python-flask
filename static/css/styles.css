@@ -434,12 +434,17 @@ section .flex{
     }
 
     .purchase-details h3{
-        padding: 20px;
+        margin-bottom: 0;
+        padding: 0 20px;
     }
 
     .purchase-img-container{
         position: relative;
         width: 100%;
+    }
+
+    .total-card{
+        margin-bottom: 120px;
     }
 
 }
