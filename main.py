@@ -186,7 +186,7 @@ def cart():
             if not purchase.buyer_id:
                 purchase_id_list.append(purchase.product_id)
                 purchases_list.append(Artwork.query.get(purchase.product_id))
-        return render_template("cart.html", purchases_list=purchases_list, purchases=len(purchases_list), current_year=current_year)
+    return render_template("cart.html", purchases_list=purchases_list, purchases=len(purchases_list), current_year=current_year)
 
 
 @app.route('/register', methods=['POST', 'GET'])

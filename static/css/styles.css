@@ -393,6 +393,18 @@ section .flex{
     }
 }
 
+@media screen and (max-width: 1100px){
+    .form-card, .purchase-card{
+        height: 80%;
+        width: 90%;
+    }
+
+    .form-card h1, purchase-card h1{
+        font-size: 2rem;
+    }
+
+
+}
 
 
 
@@ -448,6 +460,10 @@ section .flex{
     footer .container{
     margin-left: 40px;
    }
+
+   .form-card{
+        width: 100%;
+    }
 }
 
 
