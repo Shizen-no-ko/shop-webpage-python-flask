@@ -69,7 +69,10 @@ img{
 nav {
     background-color: var(--blue);
     height: 200px;
+    /*margin: 0;*/
+    /*width: 100%;*/
 }
+
 
 nav .flex {
     justify-content: space-between;
@@ -132,7 +135,8 @@ section .flex{
        box-shadow: 0px 0px 50px rgba(80, 80, 80, 0.5);
        font-family: var(--title-font);
        height: 300px;
-       margin-bottom: 20px;
+       /*margin-bottom: 20px;*/
+       margin: 0 10px 20px;
        text-align: center;
        transform: rotate(3deg);
        transition: transform 0.5s ease-out;
@@ -167,7 +171,8 @@ section .flex{
 
 .container {
     margin: 0 auto;
-    max-width: 1000px;
+    /*max-width: 1000px;*/
+    max-width: 70%;
 }
 
 .flex{
@@ -194,6 +199,10 @@ section .flex{
 
 .form-element{
     margin: 10px 0;
+}
+
+.home-card{
+
 }
 
 .hidden {
@@ -286,10 +295,12 @@ section .flex{
 .slope {
     background-color: var(--pale);
     height: 100px;
+    left: 0;
     position: relative;
-    right: -20px;
+    right: -30px;
     top: 15px;
     transform: rotate(-4deg);
+    width: 110%;
 }
 
 .title{
@@ -381,3 +392,62 @@ section .flex{
        transform: translateX(0);
     }
 }
+
+
+
+
+@media screen and (max-width: 650px) {
+   .container .flex{
+        flex-direction: column;
+   }
+
+   .card-stack{
+    margin-top: -40px;
+   }
+
+
+
+  footer .container{
+    padding-top: 20px;
+    margin-left: 80px;
+  }
+
+   nav{
+    padding-bottom: 100px;
+   }
+
+   nav h1{
+    margin-bottom: 0;
+   }
+
+   nav ul{
+    background-color: rgba(0, 0, 0, 0.2);
+    margin-bottom: 40px;
+    padding: 0;
+   }
+
+   nav .flex{
+    justify-content: center;
+   }
+
+   slope{
+        background-color: green !important;;
+        position: absolute;
+        top: 600px;
+   }
+}
+
+@media screen and (max-width: 500px){
+    footer .container{
+    margin-left: 50px;
+   }
+}
+
+
+@media screen and (max-width: 400px){
+    footer .container{
+    margin-left: 40px;
+   }
+}
+
+
