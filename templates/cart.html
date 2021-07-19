@@ -4,7 +4,7 @@
 
 <!--total variable for displaying cart total-->
 {% set total= namespace(value=0) %}
-<div class="container">
+<div class="container cart-container">
     <h1 class="title">Shopping Cart</h1>
 <!--    increment total price from rendered items-->
     {% for purchase in purchases_list %}
