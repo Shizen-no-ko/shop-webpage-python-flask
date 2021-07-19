@@ -101,6 +101,7 @@ def update_user_purchases():
 
 
 def get_purchase_count():
+    # returns amount of items in a non-logged-in cart
     purchases = 0
     all_purchases = Purchase.query.all()
     for purchase in all_purchases:

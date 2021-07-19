@@ -449,7 +449,17 @@ section .flex{
 
 }
 
+@media screen and (max-width: 1000px){
+    .modal-buttons{
+        flex-direction: column-reverse;
+        position: relative;
+    }
 
+    #modal-card{
+        height: auto;
+    }
+
+}
 
 @media screen and (max-width: 650px) {
    .container .flex{
@@ -458,9 +468,8 @@ section .flex{
 
    .card-stack{
     margin-top: -40px;
+    margin-bottom: 100px;
    }
-
-
 
   footer .container{
     padding-top: 20px;
@@ -490,6 +499,10 @@ section .flex{
         position: absolute;
         top: 600px;
    }
+
+   #modal-image{
+        height: 50vw;
+    }
 }
 
 @media screen and (max-width: 500px){
