@@ -69,8 +69,6 @@ img{
 nav {
     background-color: var(--blue);
     height: 200px;
-    /*margin: 0;*/
-    /*width: 100%;*/
 }
 
 
@@ -178,7 +176,6 @@ section .flex{
 
 .container {
     margin: 0 auto;
-    /*max-width: 1000px;*/
     max-width: 70%;
 }
 
@@ -400,6 +397,7 @@ section .flex{
     }
 }
 
+/* Responsive */
 @media screen and (max-width: 1100px){
     .form-card{
         height: 80%;
